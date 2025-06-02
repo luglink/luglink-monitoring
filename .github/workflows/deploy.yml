@@ -1,0 +1,23 @@
+
+name: Deploy Alarms to AWS
+
+on:
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.AKIA5JJNDLCF5E6EVVHO }}
+          aws-secret-access-key: ${{ secrets.EYE/KrdLY3KJT0tsYaWBjBJYic5c+71EamZu04cj }}
+          aws-region: us-east-1
+
+      - name: Deploy CloudWatch alarms
+        run: bash deploy_luglink_alarms.sh
+
