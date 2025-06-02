@@ -6,17 +6,16 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-
     steps:
-    - name: Checkout Code
-      uses: actions/checkout@v3
+      - name: Checkout Code
+        uses: actions/checkout@v3
 
-    - name: Configure AWS credentials
-      uses: aws-actions/configure-aws-credentials@v2
-      with:
-        aws-access-key-id: ${{ secrets.AKIA5JJNDLCFRTJPPB5T }}
-        aws-secret-access-key: ${{ secrets.YXz5N12nGLDUZaBi2ZDV5+RRKW1L4Bf/CANtdUTL }}
-        aws-region: us-east-1
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.AKIA5JJNDLCFRTJPPB5T }}
+          aws-secret-access-key: ${{ secrets.YXz5N12nGLDUZaBi2ZDV5+RRKW1L4Bf/CANtdUTL }}
+          aws-region: us-east-1
 
-    - name: Deploy CloudWatch alarms
-      run: bash deploy_luglink_alarms.sh
+      - name: Deploy CloudWatch alarms
+        run: bash deploy_luglink_alarms.sh
