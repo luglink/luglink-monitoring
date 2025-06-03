@@ -1,27 +1,39 @@
 name: Deploy Alarms to AWS
 
 on:
+  workflow_dispatch:
   push:
     branches: [ "main" ]
-  workflow_dispatch:
+  pull_request:
+    branches: [ "main" ]
 
 jobs:
-  deploy:
+  deploy-cloudwatch-alarms:
     name: Deploy CloudWatch Alarms
     runs-on: ubuntu-latest
 
+    env:
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      AWS_REGION: "us-east-1"
+      API_NAME: "LugLinkMatchAPI-REST"
+      STAGE: "prod"
+      SNS_TOPIC_ARN: "arn:aws:sns:us-east-1:913312012427:LugLinkAlarmsTopic"
+
     steps:
-      - name: Checkout Repository
+      - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Set up AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v2
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ca-central-1
-
-      - name: Deploy Alarms Script
+      - name: Install AWS CLI
         run: |
-          chmod +x ./deploy_luglink_alarms.sh
+          sudo apt-get update
+          sudo apt-get install -y awscli
+
+      - name: Grant execute permission to deploy script
+        run: chmod +x ./deploy_luglink_alarms.sh
+
+      - name: Enable debug and run deployment script
+        run: |
+          set -e
+          set -x  # Enables command echoing for debugging
           ./deploy_luglink_alarms.sh
