@@ -6,27 +6,29 @@ on:
       - main
     paths:
       - 'frontend/**' # Trigger only when frontend changes
+  workflow_dispatch: # Allow manual runs
 
 jobs:
   deploy:
+    name: Build and Deploy Frontend
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout source
+      - name: ⬇️ Checkout Repository
         uses: actions/checkout@v4
 
-      - name: Set up Node.js
+      - name: ⚙️ Set up Node.js
         uses: actions/setup-node@v3
         with:
           node-version: '18'
 
-      - name: Install dependencies and build
+      - name: 📦 Install Dependencies and Build Frontend
         working-directory: ./frontend
         run: |
           npm install
           npm run build
 
-      - name: Upload to S3
+      - name: 🚀 Upload Build to S3
         uses: jakejarvis/s3-sync-action@master
         with:
           args: --delete
